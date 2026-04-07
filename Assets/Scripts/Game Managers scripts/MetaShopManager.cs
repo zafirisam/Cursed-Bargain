@@ -23,11 +23,11 @@ public class MetaShopManager : MonoBehaviour
 
     public void BuyDamageUpgrade()
     {
-        int currentCoins = PlayerPrefs.GetInt("MetaCurrency", 0);
+        int currentCoins = PlayerPrefs.GetInt("Coins", 0);
 
         if (currentCoins >= damageCost)
         {
-            PlayerPrefs.SetInt("MetaCurrency", currentCoins - damageCost);
+            PlayerPrefs.SetInt("Coins", currentCoins - damageCost);
 
             int currentLevel = PlayerPrefs.GetInt("Meta_DamageLevel", 0);
             PlayerPrefs.SetInt("Meta_DamageLevel", currentLevel + 1);
@@ -43,11 +43,11 @@ public class MetaShopManager : MonoBehaviour
 
     public void BuyHealthUpgrade()
     {
-        int currentCoins = PlayerPrefs.GetInt("MetaCurrency", 0);
+        int currentCoins = PlayerPrefs.GetInt("Coins", 0);
 
         if (currentCoins >= healthCost)
         {
-            PlayerPrefs.SetInt("MetaCurrency", currentCoins - healthCost);
+            PlayerPrefs.SetInt("Coins", currentCoins - healthCost);
 
             int currentLevel = PlayerPrefs.GetInt("Meta_HealthLevel", 0);
             PlayerPrefs.SetInt("Meta_HealthLevel", currentLevel + 1);
@@ -65,7 +65,7 @@ public class MetaShopManager : MonoBehaviour
     {
         if (coinsText != null) 
         {
-            coinsText.text = $"Coins: {PlayerPrefs.GetInt("MetaCurency", 0)}";
+            coinsText.text = $"Coins: {PlayerPrefs.GetInt("Coins", 0)}";
 
         }
         

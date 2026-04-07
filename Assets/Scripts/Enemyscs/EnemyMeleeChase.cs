@@ -15,6 +15,7 @@ public class EnemyMeleeChase : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         knockback = GetComponent<Knockback2D>();
 
+        //Automatically find the player by tag if not assigned 
         if (target == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
@@ -27,16 +28,17 @@ public class EnemyMeleeChase : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // If we are currently in knockback, don't move by AI
+        //Prevent AI movement if the enemyu is currently being knocked back
         if (knockback != null && knockback.IsKnockedBack)
             return;
 
+        //Stop moving if the target is lost
         if (target == null)
         {
             rb.linearVelocity = Vector2.zero;
             return;
         }
-
+        //Move the Rigidbody directly towards the target
         Vector2 dir = ((Vector2)target.position - (Vector2)transform.position).normalized;
         rb.linearVelocity = dir * moveSpeed;
     }

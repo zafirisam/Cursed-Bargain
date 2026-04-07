@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
-    private PlayerStats stats;   // how fast the player is moving
+    private PlayerStats stats;   //how fast the player is moving
 
     [Header("Dash")]
     public float dashSpeed = 15f;
@@ -15,16 +15,16 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;        // reference to the Rigidbody2D
 
-    // input + movement state
-    private Vector2 inputDir;      // current input direction
+    //input + movement state
+    private Vector2 inputDir;      //current input direction
     private Vector2 lastMoveDir;   // last non zero movement direction
 
-    // dash state
+    //dash state
     private bool isDashing = false;
     private float dashTimeRemaining = 0f;
     private float dashCooldownRemaining = 0f;
 
-    // knockback state
+    //knockback state
     private bool isKnockback = false;
     private float knockbackTimeRemaining = 0f;
     private Vector2 knockbackDir;
@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
         float x = 0f;
         float y = 0f;
 
-        // check if movement keys are pressed and update direction
+        //check if movement keys are pressed and update direction
         if (Input.GetKey(KeyCode.A)) x = -1f;
         if (Input.GetKey(KeyCode.D)) x = 1f;
         if (Input.GetKey(KeyCode.S)) y = -1f;
@@ -52,13 +52,13 @@ public class PlayerMovement : MonoBehaviour
 
         inputDir = new Vector2(x, y).normalized;
 
-        // store last non-zero movement direction
+        //store last non-zero movement direction
         if (inputDir != Vector2.zero)
         {
             lastMoveDir = inputDir;
         }
 
-        // ---- HANDLE DASH COOLDOWN ----
+        //---- HANDLE DASH COOLDOWN ----
         if (dashCooldownRemaining > 0f)
         {
             dashCooldownRemaining -= Time.deltaTime;
@@ -66,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
 
         // ---- START DASH ----
         if (!isDashing &&
-            !isKnockback &&                        // don't start dash while being knocked back
+            !isKnockback &&                        //cant start dash while being knocked back
             dashCooldownRemaining <= 0f &&
             Input.GetKeyDown(KeyCode.Space) &&
             lastMoveDir != Vector2.zero &&
@@ -129,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
     // Expose last move direction for aiming / attacks
     public Vector2 LastMoveDir => lastMoveDir;
 
-    // --------- KNOCKBACK API (call this from other scripts) ---------
+    // --------- KNOCKBACK API ---------
     public void ApplyKnockback(Vector2 knockDirection, float strength, float duration)
     {
         if (knockDirection == Vector2.zero)
@@ -142,7 +142,7 @@ public class PlayerMovement : MonoBehaviour
         knockbackTimeRemaining = duration;
         isKnockback = true;
 
-        // Cancel dash if we get hit during dash (optional, but feels better)
+        //Cancel dash if we get hit during dash)
         isDashing = false;
     }
 }

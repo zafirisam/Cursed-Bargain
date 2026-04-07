@@ -4,7 +4,7 @@ using UnityEngine;
 public class EnemyContactDamage : MonoBehaviour
 {
     public int contactDamage = 10;
-    public float damageInterval = 2f;
+    public float damageInterval = 2f; //Cooldown between hits
 
     [Header("Player Knockback")]
     public float playerKnockbackForce = 8f;
@@ -14,44 +14,47 @@ public class EnemyContactDamage : MonoBehaviour
 
     private void Update()
     {
+        //Reduce the damage cooldown over time
         if (cooldown > 0f)
             cooldown -= Time.deltaTime;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        //Only interact with the Player
         if (!collision.collider.CompareTag("Player"))
             return;
-
+        //Exit if the cooldown hasnt expired yet
         if (cooldown > 0f)
             return;
 
-        // Deal damage
+        //Apply damage to the players Health component 
         Health health = collision.collider.GetComponent<Health>();
         if (health != null)
         {
             health.TakeDamage(contactDamage);
         }
 
-        // Direction from enemy to player
+        //Calculate the direction from this enemy to the player
         Vector2 dir = (collision.collider.transform.position - transform.position).normalized;
 
-        // Prefer the player's own movement knockback if present
+        //Handle knockback logic
         PlayerMovement playerMove = collision.collider.GetComponent<PlayerMovement>();
         if (playerMove != null)
         {
+            //Use players specific movement knockback if available
             playerMove.ApplyKnockback(dir, playerKnockbackForce, playerKnockbackDuration);
         }
         else
         {
-            // Fallback: generic Knockback2D on the player if you add it
+            //Use a generic knockback component as a fallback
             Knockback2D playerKb = collision.collider.GetComponent<Knockback2D>();
             if (playerKb != null)
             {
                 playerKb.ApplyKnockback(dir, playerKnockbackForce, playerKnockbackDuration);
             }
         }
-
+        //Reset the damage cooldown
         cooldown = damageInterval;
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// this is a script that make the camera follow a target smoothly instead of snapping instantly
+//this is a script that make the camera follow a target smoothly instead of snapping instantly
 public class CameraFollow2D : MonoBehaviour
 {
     public Transform target; // The object the camera soulf follow

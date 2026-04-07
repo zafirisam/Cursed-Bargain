@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Knockback2D : MonoBehaviour
 {
-    public float knockbackDuration = 0.15f;   // how long the knockback lasts
+    public float knockbackDuration = 0.15f;   //how long the knockback lasts
 
     private Rigidbody2D rb;
     private bool isKnockedBack;

@@ -53,7 +53,6 @@ public class PlayerMeleeAttack : MonoBehaviour
 
         if (facingDir == Vector2.zero) facingDir = Vector2.right;
 
-        // --- SPAWN VISUAL ---
         if (attackVisualPrefab != null)
         {
             Vector3 spawnPos = transform.position + (Vector3)facingDir * visualOffset;
@@ -62,13 +61,11 @@ public class PlayerMeleeAttack : MonoBehaviour
 
             GameObject effectInstance = Instantiate(attackVisualPrefab, spawnPos, rotation);
 
-            // --- NEW: Apply the size change ---
             effectInstance.transform.localScale = new Vector3(visualEffectSize, visualEffectSize, visualEffectSize);
 
             Destroy(effectInstance, visualDuration);
         }
 
-        // --- LOGIC ---
         Vector2 origin = transform.position;
         Collider2D[] hits = Physics2D.OverlapCircleAll(origin, attackRange, enemyLayer);
 

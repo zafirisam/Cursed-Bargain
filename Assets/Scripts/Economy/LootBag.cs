@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Handles dropping loot like coins and health pickups when an entity dies.
+/// </summary>
 [RequireComponent(typeof(Health))]
 public class LootBag : MonoBehaviour
 {
@@ -8,8 +11,8 @@ public class LootBag : MonoBehaviour
     public GameObject healthPrefab;
 
     [Header("Drop Rates")]
-    [Range(0, 1)] public float coinDropChance = 0.25f;
-    [Range(0, 1)] public float healthDropChance = 0.15f;
+    [Range(0, 1)] public float coinDropChance = 0.45f;
+    [Range(0, 1)] public float healthDropChance = 0.35f;
 
     private Health health;
 
@@ -20,16 +23,19 @@ public class LootBag : MonoBehaviour
 
     private void OnEnable()
     {
-        //Subscribe to the death event
+        
         if (health != null) health.OnDeath += DropLoot;
     }
 
     private void OnDisable()
     {
-        //Unsubscribe to prevent errors
+        
         if (health != null) health.OnDeath -= DropLoot;
     }
 
+    /// <summary>
+    /// Calculates random chances and instantiates loot prefabs at this object's location.
+    /// </summary>
     private void DropLoot()
     {
         float roll = Random.value;

@@ -9,29 +9,33 @@ public class EnemyProjectile : MonoBehaviour
     private Vector2 moveDirection;
     private bool isInitialized = false;
 
-    // This is called by the RangedEnemyChase script
+
+    /// <summary>
+    /// Initializes direction, rotation, and self-destruction timer.
+    /// </summary>
     public void Setup(Vector2 dir)
     {
         moveDirection = dir.normalized;
 
-        // Rotate the sprite to face the player (visual only)
+        //Rotate the projectile to point toward its travel direction
         float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
 
         isInitialized = true;
-        Destroy(gameObject, lifeTime);
+        Destroy(gameObject, lifeTime);//Cleanup after lifetime expires
     }
 
     private void Update()
     {
         if (!isInitialized) return;
 
-        // Move in the specific direction in World Space
+        //Move the projectile forwards
         transform.position += (Vector3)moveDirection * speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        //Check for the player collision
         if (other.CompareTag("Player"))
         {
             Health playerHealth = other.GetComponent<Health>();
@@ -42,6 +46,7 @@ public class EnemyProjectile : MonoBehaviour
             Destroy(gameObject);
         }
 
+        //Destroy if it hits an obstacle
         if (other.CompareTag("Obstacle"))
         {
             Destroy(gameObject);

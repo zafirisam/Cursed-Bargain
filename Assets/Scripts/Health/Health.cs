@@ -6,21 +6,21 @@ public class Health : MonoBehaviour
 {
     public event Action OnDeath;
     [Header("Health")]
-    public int maxHealth = 100; // This will be overwritten by PlayerStats
+    public int maxHealth = 100; //This will be overwritten by PlayerStats
     private int currentHealth;
-    public int CurrentHealth => currentHealth; // this is so that the UI can get the current health of the player
+    public int CurrentHealth => currentHealth; //this is so that the UI can get the current health of the player
 
     [Header("Damage Feedback")]
-    public SpriteRenderer spriteRenderer;   // assign in Inspector (or auto-find)
-    public Color hurtColor = Color.red;     // color when hurt
-    public float flashDuration = 0.1f;      // how long the flash lasts
+    public SpriteRenderer spriteRenderer;   //assign in Inspector (or auto-find)
+    public Color hurtColor = Color.red;     //color when hurt
+    public float flashDuration = 0.1f;      //how long the flash lasts
 
     private Color originalColor;
     private Coroutine flashRoutine;
 
     private void Awake()
     {
-        // We handle SpriteRenderer setup here
+        //We handle SpriteRenderer setup here
         if (spriteRenderer == null)
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -34,7 +34,6 @@ public class Health : MonoBehaviour
 
     private void Start()
     {
-        // Moved this to Start() so it runs AFTER PlayerStats sets the correct MaxHealth
         currentHealth = maxHealth;
     }
 
@@ -44,10 +43,10 @@ public class Health : MonoBehaviour
 
         Debug.Log($"{gameObject.name} took {amount} damage. HP = {currentHealth}");
 
-        // Start visual feedback
+        //Start visual feedback
         if (spriteRenderer != null)
         {
-            // if a previous flash is running, stop it so they don't fight
+            //if a previous flash is running stop it so they dont fight
             if (flashRoutine != null)
             {
                 StopCoroutine(flashRoutine);
@@ -70,16 +69,16 @@ public class Health : MonoBehaviour
 
     private IEnumerator DamageFlash()
     {
-        // change to hurt color
+        //change to hurt color
         if (spriteRenderer != null)
         {
             spriteRenderer.color = hurtColor;
         }
 
-        // wait
+        //wait
         yield return new WaitForSeconds(flashDuration);
 
-        // back to normal
+        //back to normal
         if (spriteRenderer != null)
         {
             spriteRenderer.color = originalColor;
@@ -93,6 +92,6 @@ public class Health : MonoBehaviour
 
         OnDeath?.Invoke();
 
-        Destroy(gameObject);   // later: replace with death anim / loot, etc.
+        Destroy(gameObject);   
     }
 }

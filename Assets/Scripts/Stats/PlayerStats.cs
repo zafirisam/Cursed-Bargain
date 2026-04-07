@@ -84,6 +84,8 @@ public class PlayerStats : MonoBehaviour
         if (healthComponent != null)
         {
             healthComponent.maxHealth = (int)maxHealth;
+
+            healthComponent.Heal((int)amount);
         }
     }
 

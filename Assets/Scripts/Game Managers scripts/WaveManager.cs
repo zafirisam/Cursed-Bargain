@@ -116,9 +116,9 @@ public class WaveManager : MonoBehaviour
 
         GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)]; // pick a random enemy prefab from the array
 
-        Vector3 spawnPos = GetSpawnPositionAroundCamera(); // get a random spawn position around the camera
+        Vector3 spawnPos = GetSpawnPositionAroundCamera(); //get a random spawn position around the camera
 
-        Instantiate(prefab, spawnPos, Quaternion.identity); // create the enemy in the scene
+        Instantiate(prefab, spawnPos, Quaternion.identity); //create the enemy in the scene
     }
 
     // *** FIXED: now returns Vector3 and uses offset ***

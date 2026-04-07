@@ -2,8 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
-using System.Collections; 
+using System.Collections;
 
+/// <summary>
+/// Manages the core "Cursed Bargain" risk-reward mechanic. 
+/// Handles player sacrifices, applies stat modifications (buffs and curses), 
+/// and updates the UI feedback.
+/// </summary>
 public class CursedBargainManager : MonoBehaviour
 {
     [Header("References")]
@@ -14,35 +19,50 @@ public class CursedBargainManager : MonoBehaviour
     [Header("Settings")]
     public float damageGain = 5f;
     public int majorDebuffFrequency = 5;
+    
+    //Tracks how many times the player has used the bargain during the current cycle.
     private int usageCount = 0;
+    
+    //Stores active major curses so they can be removed later.
     private List<int> activeMajorDebuffs = new List<int>();
 
+    //Reference to the active feedback coroutine so we can stop it if a new message appears.
     private Coroutine feedbackCoroutine;
 
     private void Start()
     {
+        //Hide the bargain button by default until the mechanic is unlocked.
         if (bargainButton != null)
             bargainButton.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Activates the Cursed Bargain mechanic, making the UI button visible and interactable.
+    /// </summary>
     public void UnlockBargain()
     {
         if (bargainButton != null)
         {
             bargainButton.gameObject.SetActive(true);
+            //Clear any existing listeners to prevent multiple triggers, then assign the TakeBargain method.
             bargainButton.onClick.RemoveAllListeners();
             bargainButton.onClick.AddListener(TakeBargain);
             ShowFeedback("The Cursed Bargain is open!!!");
         }
     }
 
+    /// <summary>
+    /// Triggered when the player clicks the Bargain button. 
+    /// Grants an immediate damage boost and applies either a minor sacrifice or a major curse.
+    /// </summary>
     public void TakeBargain()
     {
         if (playerStats == null) return;
 
         usageCount++;
+        //Always grant the offensive reward first.
         playerStats.ApplyDamageBoost(damageGain);
-
+        //Check if the player has hit the threshold for a major punishment.
         if (usageCount % majorDebuffFrequency == 0)
         {
             ApplyMajorCurse();
@@ -53,11 +73,14 @@ public class CursedBargainManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Randomly selects and applies a minor stat penalty to the player.
+    /// </summary>
     private void ApplyRandomMinorSacrifice()
     {
         int roll = Random.Range(0, 3);
         string msg = "";
-
+        //Apply the penalty based on the random roll.
         switch (roll)
         {
             case 0:
@@ -75,7 +98,9 @@ public class CursedBargainManager : MonoBehaviour
         }
         ShowFeedback($"{msg} (+{damageGain} DMG)");
     }
-
+    /// <summary>
+    /// Applies a severe gameplay penalty and tracks it so it can be removed upon boss defeat.
+    /// </summary>
     private void ApplyMajorCurse()
     {
         int curseType = Random.Range(0, 4);
@@ -85,6 +110,10 @@ public class CursedBargainManager : MonoBehaviour
         ShowFeedback("MAJOR CURSE: " + GetCurseName(curseType));
     }
 
+    /// <summary>
+    /// Cleanses all active major curses and resets the usage counter. 
+    /// Called when the player successfully defeats a boss.
+    /// </summary>
     public void OnBossDefeated()
     {
         foreach (int curse in activeMajorDebuffs)
@@ -97,6 +126,17 @@ public class CursedBargainManager : MonoBehaviour
         ShowFeedback("Curses Lifted!");
     }
 
+    private void Update() 
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            UnlockBargain();
+            Debug.Log("Showcase Mode: Cursed Bargain Unlocked");
+        }
+    }
+    /// <summary>
+    /// Displays a temporary message on the screen to provide immediate player feedback.
+    /// </summary>
     private void ShowFeedback(string message)
     {
         if (feedbackText == null) return;
@@ -108,6 +148,10 @@ public class CursedBargainManager : MonoBehaviour
         feedbackCoroutine = StartCoroutine(ClearFeedbackAfterDelay(2f));
     }
 
+    /// <summary>
+    /// Waits for a specified duration in real-time before clearing the feedback text.
+    /// Uses Realtime so it works even if the game is paused (Time.timeScale = 0).
+    /// </summary>
     private IEnumerator ClearFeedbackAfterDelay(float delay)
     {
         yield return new WaitForSecondsRealtime(delay); 
@@ -115,6 +159,9 @@ public class CursedBargainManager : MonoBehaviour
         feedbackCoroutine = null;
     }
 
+    /// <summary>
+    /// Helper method to convert the curse integer ID into a readable string for the UI.
+    /// </summary>
     private string GetCurseName(int type)
     {
         switch (type)

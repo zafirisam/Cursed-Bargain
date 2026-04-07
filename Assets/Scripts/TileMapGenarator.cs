@@ -119,9 +119,9 @@ public class InfiniteTilemapGenerator2D : MonoBehaviour
                                        coord.y * chunkHeight,
                                        0f);
 
-        // instatiate = create a copy of the prefab in the world
+        //instatiate = create a copy of the prefab in the world
         GameObject chunk = Instantiate(prefab, worldPos, Quaternion.identity, transform);
-        // record that we spawned this chunk so we can track and delete it later
+        //record that we spawned this chunk so we can track and delete it later
         spawnedChunks.Add(coord, chunk);
     }
 }
